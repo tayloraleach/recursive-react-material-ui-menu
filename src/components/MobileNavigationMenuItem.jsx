@@ -84,12 +84,12 @@ class MobileNavigationMenuItem extends React.Component {
                     className={classes.item}
                     style={this.getNestedBackgroundColor(this.props.node.depth)}>
                     <div className={classes.wrapper}>
-                            <a
-                                href=""
-                                style={this.getNestedPadding(this.props.node.depth)}
-                                className={classnames([classes.link, !childnodes.length && classes.goFullWidth])}>
-                                {this.props.node.title}
-                            </a>
+                        <a
+                            href=""
+                            style={this.getNestedPadding(this.props.node.depth)}
+                            className={classnames([classes.link, !childnodes.length && classes.goFullWidth])}>
+                            {this.props.node.title}
+                        </a>
                         {childnodes.length > 0 &&
                             (this.props.currentlyOpen == this.props.node.id && this.state.open ? (
                                 <ArrowDropUp />
@@ -145,7 +145,7 @@ const styles = (theme) => ({
         margin: 'auto',
         [theme.breakpoints.down('sm')]: {
             maxWidth: '100%'
-        },
+        }
     }
 });
 

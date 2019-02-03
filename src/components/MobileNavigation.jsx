@@ -17,25 +17,26 @@ class MobileNavigation extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, styles, data } = this.props;
+        const { currentOpenChildId } = this.state;
 
         // Loop through the navigation array and create a new component for each,
         // passing the current menuItem and it's children as props
 
-        const nodes = this.props.data.navigation.map((item) => {
+        const nodes = data.navigation.map((item) => {
             return (
                 <MobileNavigationMenuItem
                     key={item.id}
                     node={item}
                     passToParent={this.handleCurrentlyOpen}
-                    currentlyOpen={this.state.currentOpenChildId}>
+                    currentlyOpen={currentOpenChildId}>
                     {item.children}
                 </MobileNavigationMenuItem>
             );
         });
 
         return (
-            <List disablePadding className={classnames([this.props.styles, classes.root])}>
+            <List disablePadding className={classnames([styles, classes.root])}>
                 {nodes}
             </List>
         );
@@ -53,7 +54,7 @@ const styles = (theme) => ({
         width: '100%',
         padding: 0,
         boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
-        background: "#222"
+        background: '#222'
     },
     link: {
         color: '#fff',
