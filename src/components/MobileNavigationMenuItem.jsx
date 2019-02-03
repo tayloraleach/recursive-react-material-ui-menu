@@ -57,26 +57,8 @@ class MobileNavigationMenuItem extends React.Component {
     }
 
     render() {
-        const { classes, node, currentlyOpen } = this.props;
+        const { classes, node, currentlyOpen, children } = this.props;
         const { open, currentOpenChildId } = this.state;
-        let childnodes = null;
-
-        // The MobileNavigationMenuItem component calls itself if there are children
-        // Need to pass classes as a prop or it falls out of scope
-        if (this.props.children) {
-            childnodes = this.props.children.map((childnode) => {
-                return (
-                    <MobileNavigationMenuItem
-                        key={childnode.id}
-                        node={childnode}
-                        classes={classes}
-                        passToParent={this.handleCurrentlyOpen}
-                        currentlyOpen={currentOpenChildId}>
-                        {childnode.children}
-                    </MobileNavigationMenuItem>
-                );
-            });
-        }
 
         return (
             <React.Fragment>
@@ -88,16 +70,27 @@ class MobileNavigationMenuItem extends React.Component {
                         <a
                             href=""
                             style={this.getNestedPadding(node.depth)}
-                            className={classnames([classes.link, !childnodes.length && classes.goFullWidth])}>
+                            className={classnames([classes.link, !children.length && classes.goFullWidth])}>
                             {node.title}
                         </a>
-                        {childnodes.length > 0 &&
+                        {children.length > 0 &&
                             (currentlyOpen == node.id && open ? <ArrowDropUp /> : <ArrowDropDown />)}
                     </div>
                 </ListItem>
-                {childnodes.length > 0 && (
+                {children && (
                     <Collapse in={currentlyOpen == node.id && open} timeout="auto" unmountOnExit>
-                        <List disablePadding>{childnodes}</List>
+                        <List disablePadding>
+                            {this.props.children.map((childnode) => (
+                                <MobileNavigationMenuItem
+                                    key={childnode.id}
+                                    node={childnode}
+                                    classes={classes}
+                                    passToParent={this.handleCurrentlyOpen}
+                                    currentlyOpen={currentOpenChildId}>
+                                    {childnode.children}
+                                </MobileNavigationMenuItem>
+                            ))}
+                        </List>
                     </Collapse>
                 )}
             </React.Fragment>
