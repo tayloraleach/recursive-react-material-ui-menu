@@ -29,31 +29,18 @@ class MobileNavigationMenuItem extends React.Component {
     };
 
     getNestedBackgroundColor(depth) {
-        const styles = {
-            backgroundColor: 'rgba(255, 255, 255, 0.05)'
+        const STEP = 0.05;
+        let alpha = STEP * (depth + 1); // 0 index
+        return {
+            backgroundColor: `rgba(255, 255, 255, ${alpha})`
         };
-        if (depth === 1) {
-            styles.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-        }
-        if (depth === 2) {
-            styles.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-        }
-        return styles;
     }
 
     getNestedPadding(depth) {
-        const step = 15;
-
-        const styles = {
-            paddingLeft: 0
+        const STEP = 15;
+        return {
+            paddingLeft: depth * STEP
         };
-        if (depth === 1) {
-            styles.paddingLeft = 15;
-        }
-        if (depth === 2) {
-            styles.paddingLeft = 30;
-        }
-        return styles;
     }
 
     render() {
@@ -74,11 +61,11 @@ class MobileNavigationMenuItem extends React.Component {
                             {node.title}
                         </a>
                         {children.length > 0 &&
-                            (currentlyOpen == node.id && open ? <ArrowDropUp /> : <ArrowDropDown />)}
+                            (currentlyOpen === node.id && open ? <ArrowDropUp /> : <ArrowDropDown />)}
                     </div>
                 </ListItem>
                 {children && (
-                    <Collapse in={currentlyOpen == node.id && open} timeout="auto" unmountOnExit>
+                    <Collapse in={currentlyOpen === node.id && open} timeout="auto" unmountOnExit>
                         <List disablePadding>
                             {this.props.children.map((childnode) => (
                                 <MobileNavigationMenuItem
