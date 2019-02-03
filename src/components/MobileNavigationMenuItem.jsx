@@ -14,20 +14,20 @@ class MobileNavigationMenuItem extends React.Component {
     };
 
     handleClick = () => {
-        if (this.props.currentlyOpen == this.props.node.id) {
+        const { currentlyOpen, node, passToParent } = this.props;
+        if (currentlyOpen === node.id) {
             this.setState((state) => ({ open: !state.open }));
         } else {
-            this.setState({ open: true }, this.props.passToParent(this.props.node.id));
+            this.setState({ open: true }, passToParent(node.id));
         }
     };
 
-    handleCurrentlyOpen = (id) => {
+    handleCurrentlyOpen = (currentOpenChildId) => {
         this.setState({
-            currentOpenChildId: id
+            currentOpenChildId
         });
     };
 
-    // These got seperated due to having an inner div inside each item to be able to set a max width and maintain styles
     getNestedBackgroundColor(depth) {
         const styles = {
             backgroundColor: 'rgba(255, 255, 255, 0.05)'
@@ -42,6 +42,8 @@ class MobileNavigationMenuItem extends React.Component {
     }
 
     getNestedPadding(depth) {
+        const step = 15;
+
         const styles = {
             paddingLeft: 0
         };
@@ -55,7 +57,8 @@ class MobileNavigationMenuItem extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, node, currentlyOpen } = this.props;
+        const { open, currentOpenChildId } = this.state;
         let childnodes = null;
 
         // The MobileNavigationMenuItem component calls itself if there are children
@@ -68,41 +71,32 @@ class MobileNavigationMenuItem extends React.Component {
                         node={childnode}
                         classes={classes}
                         passToParent={this.handleCurrentlyOpen}
-                        currentlyOpen={this.state.currentOpenChildId}>
+                        currentlyOpen={currentOpenChildId}>
                         {childnode.children}
                     </MobileNavigationMenuItem>
                 );
             });
         }
 
-        // Return a ListItem element
-        // Display children if there are any
         return (
             <React.Fragment>
                 <ListItem
                     onClick={this.handleClick}
                     className={classes.item}
-                    style={this.getNestedBackgroundColor(this.props.node.depth)}>
+                    style={this.getNestedBackgroundColor(node.depth)}>
                     <div className={classes.wrapper}>
                         <a
                             href=""
-                            style={this.getNestedPadding(this.props.node.depth)}
+                            style={this.getNestedPadding(node.depth)}
                             className={classnames([classes.link, !childnodes.length && classes.goFullWidth])}>
-                            {this.props.node.title}
+                            {node.title}
                         </a>
                         {childnodes.length > 0 &&
-                            (this.props.currentlyOpen == this.props.node.id && this.state.open ? (
-                                <ArrowDropUp />
-                            ) : (
-                                <ArrowDropDown />
-                            ))}
+                            (currentlyOpen == node.id && open ? <ArrowDropUp /> : <ArrowDropDown />)}
                     </div>
                 </ListItem>
                 {childnodes.length > 0 && (
-                    <Collapse
-                        in={this.props.currentlyOpen == this.props.node.id && this.state.open}
-                        timeout="auto"
-                        unmountOnExit>
+                    <Collapse in={currentlyOpen == node.id && open} timeout="auto" unmountOnExit>
                         <List disablePadding>{childnodes}</List>
                     </Collapse>
                 )}

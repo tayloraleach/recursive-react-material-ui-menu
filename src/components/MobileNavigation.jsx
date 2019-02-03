@@ -10,34 +10,33 @@ class MobileNavigation extends React.Component {
         currentOpenChildId: null
     };
 
-    handleCurrentlyOpen = (id) => {
+    handleCurrentlyOpen = (currentOpenChildId) => {
         this.setState({
-            currentOpenChildId: id
+            currentOpenChildId
         });
     };
 
     render() {
-        const { classes, styles, data } = this.props;
+        const {
+            classes,
+            styles,
+            data: { navigation }
+        } = this.props;
         const { currentOpenChildId } = this.state;
-
-        // Loop through the navigation array and create a new component for each,
-        // passing the current menuItem and it's children as props
-
-        const nodes = data.navigation.map((item) => {
-            return (
-                <MobileNavigationMenuItem
-                    key={item.id}
-                    node={item}
-                    passToParent={this.handleCurrentlyOpen}
-                    currentlyOpen={currentOpenChildId}>
-                    {item.children}
-                </MobileNavigationMenuItem>
-            );
-        });
 
         return (
             <List disablePadding className={classnames([styles, classes.root])}>
-                {nodes}
+                {/* Loop through the navigation array and create a new menuItem for each,
+                 passing the current menuItem and it's children as props */}
+                {navigation.map((item) => (
+                    <MobileNavigationMenuItem
+                        key={item.id}
+                        node={item}
+                        passToParent={this.handleCurrentlyOpen}
+                        currentlyOpen={currentOpenChildId}>
+                        {item.children}
+                    </MobileNavigationMenuItem>
+                ))}
             </List>
         );
     }
